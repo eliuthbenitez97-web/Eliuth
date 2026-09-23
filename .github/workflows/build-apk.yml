@@ -20,27 +20,17 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Configurar Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Instalar Android SDK 35
+      - name: Preparar Android SDK
         run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --version
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
       - name: Extraer proyecto
         run: |
           mkdir proyecto
           unzip -q Proyecto_Eliuth_ANDROID_MOVIL.zip -d proyecto
-
-      - name: Preparar carpeta del proyecto
-        run: |
-          if [ -d "proyecto/MiNegocio_Android" ]; then
-            echo "Proyecto encontrado en MiNegocio_Android"
-          else
-            echo "Buscando proyecto..."
-            find proyecto -maxdepth 3 -name settings.gradle -print
-          fi
 
       - name: Configurar Gradle
         uses: gradle/actions/setup-gradle@v4
